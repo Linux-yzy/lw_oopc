@@ -1,14 +1,23 @@
-﻿#ifndef ANIMAL_H_INCLUDED_
+#ifndef ANIMAL_H_INCLUDED_
 #define ANIMAL_H_INCLUDED_
 
 #include "lw_oopc.h"
 
-INTERFACE(IMoveable)
+//INTERFACE(IMoveable)
+typedef struct IMoveable IMoveable; 
+void IMoveable_ctor(IMoveable* t); 
+int IMoveable_dtor(IMoveable* t); 
+struct IMoveable(IMoveable)
 {
     void (*move)(IMoveable* t);     // Move行为
 };
 
-ABS_CLASS(Animal)
+//ABS_CLASS(Animal)
+typedef struct Animal Animal; 
+void Animal_ctor(Animal* t); 
+int Animal_dtor(Animal* t); 
+void Animal_delete(Animal* t); 
+struct Animal
 {
     char name[128];     // 动物的昵称(假设小于128个字符)
     int age;            // 动物的年龄
@@ -21,14 +30,23 @@ ABS_CLASS(Animal)
     void (*init)(Animal* t, const char* name, int age); // 初始化昵称和年龄
 };
 
-CLASS(Fish)
+//CLASS(Fish)
+typedef struct Fish Fish; 
+Fish* Fish_new(lw_oopc_file_line_params);
+void Fish_ctor(Fish* t); 
+int Fish_dtor(Fish* t); 
+void Fish_delete(Fish* t); 
+struct Fish
 {
-    EXTENDS(Animal);        // 继承Animal抽象类
-    IMPLEMENTS(IMoveable);  // 实现IMoveable接口
+    //EXTENDS(Animal);        // 继承Animal抽象类
+    struct Animal Animal;
+    //IMPLEMENTS(IMoveable);  // 实现IMoveable接口
+    struct IMoveable IMoveable;
 
     void (*init)(Fish* t, const char* name, int age);
 };
 
+#if 0
 CLASS(Dog)
 {
     EXTENDS(Animal);        // 继承Animal抽象类
@@ -42,5 +60,5 @@ CLASS(Car)
 {
     IMPLEMENTS(IMoveable);  // 实现IMoveable接口（车子不是动物，但可以Move）
 };
-
+#endif
 #endif
